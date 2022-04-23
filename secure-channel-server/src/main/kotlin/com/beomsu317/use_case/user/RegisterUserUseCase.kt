@@ -33,8 +33,8 @@ class RegisterUserUseCase(
     private fun RegisterUserRequest.toEntity() = User(
         email = email,
         passwordSha256WithSalt = getSha256WithSalt(password),
-        displayName = displayName,
-        photoUrl = photoUrl
+        displayName = "",
+        photoUrl = ""
     )
 }
 
@@ -42,7 +42,5 @@ class RegisterUserUseCase(
 data class RegisterUserRequest(
     val email: String,
     val password: String,
-    val confirmPassword: String,
-    val displayName: String,
-    val photoUrl: String
+    val confirmPassword: String
 )
