@@ -17,6 +17,8 @@ class LoginUseCase(
 
         val token = JWT.create()
             .withClaim("email", user.email)
+            .withClaim("displayName", user.displayName)
+            .withClaim("photoUrl", user.photoUrl)
             .sign(Algorithm.HMAC256(secret))
         return LoginResult(token)
     }

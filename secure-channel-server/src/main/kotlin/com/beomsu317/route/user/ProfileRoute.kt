@@ -28,6 +28,10 @@ class ProfileRoute(
                 call.respond(HttpStatusCode.OK, Response<GetUserResult>(result = result))
             }
 
+            post("/update-profile") {
+
+            }
+
             post("/upload-image") {
                 val principle = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
                 val email = principle.payload.getClaim("email").asString()

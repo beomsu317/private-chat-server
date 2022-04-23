@@ -10,5 +10,6 @@ data class User(
     val email: String,
     val passwordSha256WithSalt: String,
     val displayName: String,
-    val photoUrl: String
+    val photoUrl: String,
+    val roomList: List<String>
 )
