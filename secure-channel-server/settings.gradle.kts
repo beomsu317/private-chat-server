@@ -1,0 +1,1 @@
+rootProject.name = "com.beomsu317.secure-channel-server"
