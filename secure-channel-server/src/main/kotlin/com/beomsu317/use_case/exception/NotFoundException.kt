@@ -17,3 +17,5 @@ class ParameterNotFoundException(code: Int = 3, message: String = "Required para
 class ChattingRoomNotFoundException(code: Int = 4, message: String = "Chatting room is not found") :
     NotFoundException(code, message)
 
+class RoomDoesNotFoundException(code: Int = 5, message: String = "Room does not found") :
+    NotFoundException(code, message)

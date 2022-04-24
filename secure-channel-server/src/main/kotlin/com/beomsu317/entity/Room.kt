@@ -5,7 +5,8 @@ import org.litote.kmongo.Id
 import org.litote.kmongo.newId
 
 data class Room(
-    @BsonId val _id: Id<Room> = newId(),
+    @BsonId val id: Id<Room> = newId(),
     val title: String,
-    val users: List<String>
+    val owner: Id<User>,
+    val users: Set<Id<User>>,
 )

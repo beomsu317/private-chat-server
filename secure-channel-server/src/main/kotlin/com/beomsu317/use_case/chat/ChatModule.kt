@@ -4,5 +4,8 @@ import org.koin.dsl.module
 
 val chatUseCaseModule = module(createdAtStart = true) {
     single { RoomController() }
-    single { ChatUseCase(get(), get()) }
+    single { ChatUseCase(get()) }
+    single { JoinRoomUseCase(get(), get()) }
+    single { CreateRoomUseCase(get(), get()) }
+    single { LeaveRoomUseCase(get(), get()) }
 }

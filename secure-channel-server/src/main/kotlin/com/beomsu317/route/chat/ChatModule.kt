@@ -5,4 +5,5 @@ import org.koin.dsl.module
 
 val chatRouteModules = module(createdAtStart = true) {
     registerRoute { ChatRoute(get()) }
+    registerRoute { RoomRoute(get(), get(), get()) }
 }

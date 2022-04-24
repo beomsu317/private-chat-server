@@ -12,5 +12,5 @@ data class User(
     val displayName: String,
     val photoUrl: String,
     val friends: Set<Id<User>>,
-    val rooms: Set<String>
+    val rooms: Set<Id<Room>>
 )

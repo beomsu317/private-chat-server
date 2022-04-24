@@ -14,7 +14,6 @@ import kotlinx.serialization.json.Json
 
 @UseCase
 class ChatUseCase(
-    private val repository: UserRepository,
     private val roomController: RoomController
 ) {
     suspend operator fun invoke(

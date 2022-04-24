@@ -8,5 +8,5 @@ fun User.toDto() = UserDto(
     displayName = displayName,
     photoUrl = photoUrl,
     friends = friends.map { it.toString() }.toSet(),
-    rooms = rooms
+    rooms = rooms.map { it.toString() }.toSet()
 )
