@@ -1,17 +1,17 @@
 package com.beomsu317.data.chat
 
 import com.beomsu317.entity.Room
-import com.beomsu317.use_case.chat.ChatRepository
+import com.beomsu317.use_case.chat.repository.RoomRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.litote.kmongo.Id
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 
-class ChatRepositoryImpl(
+class RoomRepositoryImpl(
     private val db: CoroutineDatabase,
     private val dispatcher: CoroutineDispatcher
-): ChatRepository {
+): RoomRepository {
 
     private val rooms = db.getCollection<Room>()
 

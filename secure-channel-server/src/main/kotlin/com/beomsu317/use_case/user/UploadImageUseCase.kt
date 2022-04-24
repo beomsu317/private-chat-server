@@ -1,7 +1,7 @@
 package com.beomsu317.use_case.user
 
 import com.beomsu317.use_case.exception.UnSupportedImageTypeException
-import com.beomsu317.use_case.exception.UserDoesNotFoundException
+import com.beomsu317.use_case.exception.UserNotFoundException
 import io.ktor.http.*
 import io.ktor.http.content.*
 import org.bson.types.ObjectId
@@ -12,7 +12,7 @@ class UploadImageUseCase(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(id: String, part: PartData, serverUrl: String): UploadImageResult {
-        val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserDoesNotFoundException()
+        val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
         var photoUri = "uploads/user/profile/${user.id}."
         when (part) {
             is PartData.FileItem -> {

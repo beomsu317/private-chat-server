@@ -1,8 +1,12 @@
 package com.beomsu317.use_case.chat
 
 import com.beomsu317.use_case.UseCase
+import com.beomsu317.use_case.chat.dto.MessageDto
+import com.beomsu317.use_case.chat.mapper.toEntity
+import com.beomsu317.use_case.chat.repository.RoomRepository
+import com.beomsu317.use_case.chat.repository.MessageRepository
 import com.beomsu317.use_case.exception.UnknownUserException
-import com.beomsu317.use_case.exception.UserDoesNotFoundException
+import com.beomsu317.use_case.exception.UserNotFoundException
 import com.beomsu317.use_case.user.UserRepository
 import io.ktor.auth.jwt.*
 import io.ktor.http.cio.websocket.*
@@ -11,9 +15,14 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.bson.types.ObjectId
+import org.litote.kmongo.id.toId
 
 @UseCase
 class ChatUseCase(
+    private val userRepository: UserRepository,
+    private val messageRepository: MessageRepository,
+    private val chatRepository: RoomRepository,
     private val roomController: RoomController
 ) {
     suspend operator fun invoke(
@@ -22,29 +31,19 @@ class ChatUseCase(
         incoming: ReceiveChannel<Frame>,
         defaultWebSocketServerSession: DefaultWebSocketServerSession
     ) {
-        val displayName = principal.payload.getClaim("displayName").asString()
-        if (displayName.isNullOrEmpty()) {
-            throw UserDoesNotFoundException()
-        }
+        val id = principal.payload.getClaim("id").asString() ?: throw UnknownUserException()
+        val user = userRepository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
 
         roomController.addSession(roomId, defaultWebSocketServerSession)
-        val sessions = roomController.getSessions(roomId)
-        sessions.forEach {
-            it.send("${displayName} joins this room")
-        }
 
         try {
             for (frame in incoming) {
                 when (frame) {
                     is Frame.Text -> {
                         val receiveText = frame.readText()
-                        val message = Json.decodeFromString<MessageDto>(receiveText)
-                        if (message.displayName != displayName) {
-                            throw UnknownUserException()
-                        }
-                        sessions.forEach {
-                            it.send(Json.encodeToString(message))
-                        }
+                        val messageDto = Json.decodeFromString<MessageDto>(receiveText)
+                        messageRepository.insertMessage(messageDto.toEntity())
+                        roomController.sendMessage(roomId, Json.encodeToString(messageDto))
                     }
                 }
             }
@@ -52,9 +51,6 @@ class ChatUseCase(
             throw e
         } finally {
             roomController.removeSession(roomId, defaultWebSocketServerSession)
-            sessions.forEach {
-                it.send("${displayName} left this room")
-            }
         }
     }
 }

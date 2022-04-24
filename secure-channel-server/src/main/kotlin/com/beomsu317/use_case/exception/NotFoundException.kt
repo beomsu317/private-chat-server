@@ -5,7 +5,7 @@ import io.ktor.http.*
 abstract class NotFoundException(code: Int, message: String) :
     BaseException(HttpStatusCode.NotFound, code, message)
 
-class UserDoesNotFoundException(code: Int = 1, message: String = "User does not found") :
+class UserNotFoundException(code: Int = 1, message: String = "User not found") :
     NotFoundException(code, message)
 
 class ConfigurationNotFoundException(code: Int = 2, message: String = "Configuration not found") :
@@ -14,8 +14,8 @@ class ConfigurationNotFoundException(code: Int = 2, message: String = "Configura
 class ParameterNotFoundException(code: Int = 3, message: String = "Required parameter is not present") :
     NotFoundException(code, message)
 
-class ChattingRoomNotFoundException(code: Int = 4, message: String = "Chatting room is not found") :
+class ChatRoomNotFoundException(code: Int = 4, message: String = "Chat room not found") :
     NotFoundException(code, message)
 
-class RoomDoesNotFoundException(code: Int = 5, message: String = "Room does not found") :
+class RoomNotFoundException(code: Int = 5, message: String = "Room not found") :
     NotFoundException(code, message)

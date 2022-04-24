@@ -1,4 +1,4 @@
-package com.beomsu317.use_case.chat
+package com.beomsu317.use_case.chat.dto
 
 import org.litote.kmongo.Id
 

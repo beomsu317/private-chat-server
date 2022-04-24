@@ -1,9 +1,9 @@
-package com.beomsu317.use_case.chat
+package com.beomsu317.use_case.chat.repository
 
 import com.beomsu317.entity.Room
 import org.litote.kmongo.Id
 
-interface ChatRepository {
+interface RoomRepository {
 
     suspend fun insertRoom(room: Room): Boolean
 
