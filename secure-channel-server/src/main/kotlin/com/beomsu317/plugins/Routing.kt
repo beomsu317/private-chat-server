@@ -11,7 +11,9 @@ import java.io.File
 fun Application.configureRouting() {
     val routes = GlobalContext.get().getAll<Route>().toSet()
     log.info("registered route. {}", routes.map { it.javaClass.simpleName })
-    routes.forEach { route -> route(this@configureRouting) }
+    routes.forEach { route ->
+        route(this@configureRouting)
+    }
 
     routing {
         static("/user/profile") {

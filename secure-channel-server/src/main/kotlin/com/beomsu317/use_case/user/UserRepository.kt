@@ -8,4 +8,6 @@ interface UserRepository {
     suspend fun insertUser(user: User): Boolean
 
     suspend fun getUserByEmail(email: String): User?
+
+    suspend fun updateUser(user: User)
 }

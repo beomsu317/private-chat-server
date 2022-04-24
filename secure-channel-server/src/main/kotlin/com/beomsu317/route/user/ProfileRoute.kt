@@ -17,10 +17,11 @@ import java.nio.file.Paths
 
 class ProfileRoute(
     private val uploadImageUseCase: UploadImageUseCase,
-    private val getUserUseCase: GetUserUseCase
+    private val getUserUseCase: GetUserUseCase,
+    private val updateUserUseCase: UpdateUserUseCase
 ) : Route({
     authenticate("jwt") {
-        route("/profile") {
+        route("/user/profile") {
             get {
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
                 val email = principal.payload.getClaim("email").asString()
@@ -28,8 +29,12 @@ class ProfileRoute(
                 call.respond(HttpStatusCode.OK, Response<GetUserResult>(result = result))
             }
 
-            post("/update-profile") {
-
+            post("/update") {
+                val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
+                val email = principal.payload.getClaim("email").asString()
+                val request = call.receive<UpdateUserRequest>()
+                updateUserUseCase(email, request)
+                call.respond(HttpStatusCode.OK, Response<Unit>())
             }
 
             post("/upload-image") {
@@ -39,7 +44,6 @@ class ProfileRoute(
                 val host = application.environment.config.propertyOrNull("ktor.deployment.host") ?: throw ConfigurationNotFoundException()
                 val port = application.environment.config.propertyOrNull("ktor.deployment.port") ?: throw ConfigurationNotFoundException()
                 val url = "http://${host.getString()}:${port.getString()}/"
-                application.log.info(url)
                 lateinit var result: UploadImageResult
                 multipart.forEachPart { part ->
                     result = uploadImageUseCase(email, part, url)

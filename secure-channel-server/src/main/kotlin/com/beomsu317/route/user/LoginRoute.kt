@@ -16,7 +16,7 @@ import io.ktor.routing.*
 class LoginRoute(
     loginUseCase: LoginUseCase
 ): Route({
-    route("/login") {
+    route("/user/login") {
         post {
             val request = call.receive<LoginRequest>()
             val jwtSecret = application.environment.config.propertyOrNull("jwt.secret") ?: throw ConfigurationNotFoundException()

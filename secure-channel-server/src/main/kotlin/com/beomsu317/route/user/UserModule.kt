@@ -6,5 +6,5 @@ import org.koin.dsl.module
 val userRouteModule = module(createdAtStart = true) {
     registerRoute { RegisterRoute(get()) }
     registerRoute { LoginRoute(get()) }
-    registerRoute { ProfileRoute(get(), get()) }
+    registerRoute { ProfileRoute(get(), get(), get()) }
 }

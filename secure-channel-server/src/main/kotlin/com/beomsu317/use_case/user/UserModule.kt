@@ -7,4 +7,5 @@ val userUseCaseModule = module(createdAtStart = true) {
     single { LoginUseCase(get()) }
     single { UploadImageUseCase(get()) }
     single { GetUserUseCase(get()) }
+    single { UpdateUserUseCase(get()) }
 }

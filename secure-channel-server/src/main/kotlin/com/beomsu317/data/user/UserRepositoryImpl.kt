@@ -25,4 +25,10 @@ class UserRepositoryImpl(
             users.findOne(User::email eq email)
         }
     }
+
+    override suspend fun updateUser(user: User) {
+        return withContext(dispatcher) {
+            users.updateOne(User::_id eq user._id, user).wasAcknowledged()
+        }
+    }
 }

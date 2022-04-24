@@ -20,3 +20,8 @@ class NotEmailAddressException(
     code: Int = 3,
     message: String = "Email address is not validate"
 ) : PrecoditionFailedException(code, message)
+
+class EmptyDisplayNameException(
+    code: Int = 4,
+    message: String = "Display name must not be empty"
+) : PrecoditionFailedException(code, message)

@@ -13,7 +13,7 @@ import io.ktor.routing.*
 class RegisterRoute(
     private val registerUserUseCase: RegisterUserUseCase
 ) : Route({
-    route("/register") {
+    route("/user/register") {
         post {
             val request = call.receive<RegisterUserRequest>()
             registerUserUseCase(request)
