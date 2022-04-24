@@ -16,6 +16,7 @@ class LoginUseCase(
         }
 
         val token = JWT.create()
+            .withClaim("id", user.id.toString())
             .withClaim("email", user.email)
             .withClaim("displayName", user.displayName)
             .withClaim("photoUrl", user.photoUrl)

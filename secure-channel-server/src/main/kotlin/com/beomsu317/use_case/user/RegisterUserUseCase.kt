@@ -35,7 +35,8 @@ class RegisterUserUseCase(
         passwordSha256WithSalt = getSha256WithSalt(password),
         displayName = "",
         photoUrl = "",
-        roomList = emptyList()
+        friends = emptyList(),
+        rooms = emptyList()
     )
 }
 

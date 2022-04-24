@@ -6,6 +6,7 @@ val userUseCaseModule = module(createdAtStart = true) {
     single { RegisterUserUseCase(get()) }
     single { LoginUseCase(get()) }
     single { UploadImageUseCase(get()) }
-    single { GetUserUseCase(get()) }
+    single { GetUserByIdUseCase(get()) }
     single { UpdateUserUseCase(get()) }
+    single { AddFriendsUseCase(get()) }
 }

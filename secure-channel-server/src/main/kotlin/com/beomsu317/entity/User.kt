@@ -6,10 +6,11 @@ import org.litote.kmongo.newId
 
 data class User(
     @BsonId
-    val _id: Id<User> = newId(),
+    val id: Id<User> = newId(),
     val email: String,
     val passwordSha256WithSalt: String,
     val displayName: String,
     val photoUrl: String,
-    val roomList: List<String>
+    val friends: List<Id<User>>,
+    val rooms: List<String>
 )

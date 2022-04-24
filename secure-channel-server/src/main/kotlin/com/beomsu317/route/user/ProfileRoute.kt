@@ -13,33 +13,32 @@ import io.ktor.http.content.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import java.nio.file.Paths
 
 class ProfileRoute(
     private val uploadImageUseCase: UploadImageUseCase,
-    private val getUserUseCase: GetUserUseCase,
+    private val getUserByIdUseCase: GetUserByIdUseCase,
     private val updateUserUseCase: UpdateUserUseCase
 ) : Route({
     authenticate("jwt") {
         route("/user/profile") {
             get {
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
-                val email = principal.payload.getClaim("email").asString()
-                val result = getUserUseCase(email)
-                call.respond(HttpStatusCode.OK, Response<GetUserResult>(result = result))
+                val id = principal.payload.getClaim("id").asString()
+                val result = getUserByIdUseCase(id)
+                call.respond(HttpStatusCode.OK, Response<GetUserByIdResult>(result = result))
             }
 
             post("/update") {
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
-                val email = principal.payload.getClaim("email").asString()
+                val id = principal.payload.getClaim("id").asString()
                 val request = call.receive<UpdateUserRequest>()
-                updateUserUseCase(email, request)
+                updateUserUseCase(id, request)
                 call.respond(HttpStatusCode.OK, Response<Unit>())
             }
 
             post("/upload-image") {
                 val principle = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
-                val email = principle.payload.getClaim("email").asString()
+                val email = principle.payload.getClaim("id").asString()
                 val multipart = call.receiveMultipart()
                 val host = application.environment.config.propertyOrNull("ktor.deployment.host") ?: throw ConfigurationNotFoundException()
                 val port = application.environment.config.propertyOrNull("ktor.deployment.port") ?: throw ConfigurationNotFoundException()
