@@ -38,14 +38,14 @@ class ProfileRoute(
 
             post("/upload-image") {
                 val principle = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
-                val email = principle.payload.getClaim("id").asString()
+                val id = principle.payload.getClaim("id").asString()
                 val multipart = call.receiveMultipart()
                 val host = application.environment.config.propertyOrNull("ktor.deployment.host") ?: throw ConfigurationNotFoundException()
                 val port = application.environment.config.propertyOrNull("ktor.deployment.port") ?: throw ConfigurationNotFoundException()
                 val url = "http://${host.getString()}:${port.getString()}/"
                 lateinit var result: UploadImageResult
                 multipart.forEachPart { part ->
-                    result = uploadImageUseCase(email, part, url)
+                    result = uploadImageUseCase(id, part, url)
                 }
                 call.respond(HttpStatusCode.OK, Response<UploadImageResult>(result = result))
             }

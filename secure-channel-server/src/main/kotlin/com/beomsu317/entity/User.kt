@@ -11,6 +11,6 @@ data class User(
     val passwordSha256WithSalt: String,
     val displayName: String,
     val photoUrl: String,
-    val friends: List<Id<User>>,
-    val rooms: List<String>
+    val friends: Set<Id<User>>,
+    val rooms: Set<String>
 )

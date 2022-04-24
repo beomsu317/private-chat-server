@@ -25,3 +25,8 @@ class EmptyDisplayNameException(
     code: Int = 4,
     message: String = "Display name must not be empty"
 ) : PrecoditionFailedException(code, message)
+
+class InappropriateFriendsIncludeException(
+    code: Int = 5,
+    message: String = "Inappropriate friend in the list of friends to add"
+) : PrecoditionFailedException(code, message)

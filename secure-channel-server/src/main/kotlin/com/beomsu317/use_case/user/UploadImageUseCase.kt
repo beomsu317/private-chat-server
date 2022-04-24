@@ -13,8 +13,7 @@ class UploadImageUseCase(
 ) {
     suspend operator fun invoke(id: String, part: PartData, serverUrl: String): UploadImageResult {
         val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserDoesNotFoundException()
-        val id = user.id
-        var photoUri = "uploads/user/profile/${id}."
+        var photoUri = "uploads/user/profile/${user.id}."
         when (part) {
             is PartData.FileItem -> {
                 val fileBytes = part.streamProvider().readBytes()
