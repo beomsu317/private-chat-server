@@ -1,8 +1,12 @@
 package com.beomsu317.use_case.chat.controller
 
 import com.beomsu317.entity.Room
+import com.beomsu317.use_case.chat.dto.RoomDto
+import com.beomsu317.use_case.chat.toDto
 import com.beomsu317.use_case.exception.SessionNotFoundException
 import io.ktor.http.cio.websocket.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.concurrent.ConcurrentHashMap
 
 class NotificationController {
@@ -19,7 +23,7 @@ class NotificationController {
     suspend fun pushNotification(room: Room) {
         room.users.forEach { userId ->
             val session = userSessions.get(userId.toString()) ?: throw SessionNotFoundException()
-            session.send(room.id.toString())
+            session.send(Json.encodeToString(room.toDto()))
         }
     }
 }
