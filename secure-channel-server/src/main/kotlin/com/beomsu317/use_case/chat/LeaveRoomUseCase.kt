@@ -1,12 +1,12 @@
 package com.beomsu317.use_case.chat
 
 import com.beomsu317.entity.Room
+import com.beomsu317.use_case.chat.controller.RoomController
 import com.beomsu317.use_case.chat.repository.RoomRepository
 import com.beomsu317.use_case.exception.RoomNotFoundException
 import com.beomsu317.use_case.exception.UserNotFoundException
 import com.beomsu317.use_case.user.UserRepository
 import io.ktor.auth.jwt.*
-import io.ktor.http.cio.websocket.*
 import org.bson.types.ObjectId
 import org.litote.kmongo.id.toId
 

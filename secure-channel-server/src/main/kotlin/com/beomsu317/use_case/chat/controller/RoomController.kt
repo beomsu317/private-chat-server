@@ -1,4 +1,4 @@
-package com.beomsu317.use_case.chat
+package com.beomsu317.use_case.chat.controller
 
 import com.beomsu317.use_case.exception.ChatRoomNotFoundException
 import io.ktor.http.cio.websocket.*

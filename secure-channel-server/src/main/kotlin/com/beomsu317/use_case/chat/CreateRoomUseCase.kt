@@ -2,6 +2,7 @@ package com.beomsu317.use_case.chat
 
 import com.beomsu317.entity.Room
 import com.beomsu317.entity.User
+import com.beomsu317.use_case.chat.controller.NotificationController
 import com.beomsu317.use_case.chat.dto.RoomDto
 import com.beomsu317.use_case.chat.repository.RoomRepository
 import com.beomsu317.use_case.exception.UnknownUserException
@@ -13,7 +14,8 @@ import org.litote.kmongo.id.toId
 
 class CreateRoomUseCase(
     private val userRepository: UserRepository,
-    private val chatRepository: RoomRepository
+    private val chatRepository: RoomRepository,
+    private val notificationController: NotificationController
 ) {
 
     suspend operator fun invoke(principal: JWTPrincipal, request: CreateRoomRequest): CreateRoomResult {
@@ -25,6 +27,8 @@ class CreateRoomUseCase(
             users = request.users.map { ObjectId(it).toId<User>() }.toSet() + owner.id
         )
         chatRepository.insertRoom(room)
+        notificationController.pushNotification(room)
+
         room.users.forEach {
             val user = userRepository.getUserById(it) ?: throw UserNotFoundException()
             val updatedUser = user.copy(rooms = user.rooms + room.id)

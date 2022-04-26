@@ -1,6 +1,7 @@
 package com.beomsu317.use_case.chat
 
 import com.beomsu317.entity.Room
+import com.beomsu317.use_case.chat.controller.RoomController
 import com.beomsu317.use_case.chat.repository.RoomRepository
 import com.beomsu317.use_case.exception.RoomNotFoundException
 import com.beomsu317.use_case.exception.UnknownUserException

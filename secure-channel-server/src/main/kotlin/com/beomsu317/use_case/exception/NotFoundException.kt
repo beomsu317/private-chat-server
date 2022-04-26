@@ -19,3 +19,6 @@ class ChatRoomNotFoundException(code: Int = 4, message: String = "Chat room not 
 
 class RoomNotFoundException(code: Int = 5, message: String = "Room not found") :
     NotFoundException(code, message)
+
+class SessionNotFoundException(code: Int = 6, message: String = "Session not found") :
+    NotFoundException(code, message)
