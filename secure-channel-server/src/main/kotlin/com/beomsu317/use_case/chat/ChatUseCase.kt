@@ -3,6 +3,7 @@ package com.beomsu317.use_case.chat
 import com.beomsu317.use_case.UseCase
 import com.beomsu317.use_case.chat.dto.MessageDto
 import com.beomsu317.use_case.chat.repository.RoomRepository
+import com.beomsu317.use_case.exception.NoPermissionForRoomException
 import com.beomsu317.use_case.exception.RoomNotFoundException
 import com.beomsu317.use_case.exception.UnknownUserException
 import com.beomsu317.use_case.exception.UserNotFoundException
@@ -34,6 +35,10 @@ class ChatUseCase(
         val room = chatRepository.getRoomById(ObjectId(roomId).toId()) ?: throw RoomNotFoundException()
 
         roomController.addSession(room.id.toString(), defaultWebSocketServerSession)
+
+        if (!room.users.contains(user.id)) {
+            throw NoPermissionForRoomException()
+        }
 
         try {
             for (frame in incoming) {
