@@ -1,1 +1,1 @@
-# secure-channel
+# Private Chat Server
