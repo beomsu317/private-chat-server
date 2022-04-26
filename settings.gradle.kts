@@ -1,1 +1,1 @@
-rootProject.name = "com.beomsu317.private-chat-server"
+rootProject.name = "com.beomsu317.privatechatserver"
