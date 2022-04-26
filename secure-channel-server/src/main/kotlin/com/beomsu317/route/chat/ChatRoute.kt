@@ -23,19 +23,4 @@ class ChatRoute(
             }
         }
     }
-
-    webSocket("/c") {
-        try {
-            for (frame in incoming) {
-                when (frame) {
-                    is Frame.Text -> {
-                        val receiveText = frame.readText()
-                        application.log.info(receiveText)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 })
