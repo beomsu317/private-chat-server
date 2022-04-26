@@ -2,9 +2,8 @@ package com.beomsu317.use_case.chat
 
 import com.beomsu317.use_case.UseCase
 import com.beomsu317.use_case.chat.dto.MessageDto
-import com.beomsu317.use_case.chat.mapper.toEntity
 import com.beomsu317.use_case.chat.repository.RoomRepository
-import com.beomsu317.use_case.chat.repository.MessageRepository
+import com.beomsu317.use_case.exception.RoomNotFoundException
 import com.beomsu317.use_case.exception.UnknownUserException
 import com.beomsu317.use_case.exception.UserNotFoundException
 import com.beomsu317.use_case.user.UserRepository
@@ -21,7 +20,6 @@ import org.litote.kmongo.id.toId
 @UseCase
 class ChatUseCase(
     private val userRepository: UserRepository,
-    private val messageRepository: MessageRepository,
     private val chatRepository: RoomRepository,
     private val roomController: RoomController
 ) {
@@ -33,8 +31,9 @@ class ChatUseCase(
     ) {
         val id = principal.payload.getClaim("id").asString() ?: throw UnknownUserException()
         val user = userRepository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
+        val room = chatRepository.getRoomById(ObjectId(roomId).toId()) ?: throw RoomNotFoundException()
 
-        roomController.addSession(roomId, defaultWebSocketServerSession)
+        roomController.addSession(room.id.toString(), defaultWebSocketServerSession)
 
         try {
             for (frame in incoming) {
@@ -42,15 +41,17 @@ class ChatUseCase(
                     is Frame.Text -> {
                         val receiveText = frame.readText()
                         val messageDto = Json.decodeFromString<MessageDto>(receiveText)
-                        messageRepository.insertMessage(messageDto.toEntity())
-                        roomController.sendMessage(roomId, Json.encodeToString(messageDto))
+                        if (messageDto.displayName != user.displayName) {
+                            throw UnknownUserException()
+                        }
+                        roomController.sendMessage(room.id.toString(), Json.encodeToString(messageDto))
                     }
                 }
             }
         } catch (e: Throwable) {
             throw e
         } finally {
-            roomController.removeSession(roomId, defaultWebSocketServerSession)
+            roomController.removeSession(room.id.toString(), defaultWebSocketServerSession)
         }
     }
 }

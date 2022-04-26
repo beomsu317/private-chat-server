@@ -2,6 +2,7 @@ package com.beomsu317
 
 import io.ktor.application.*
 import com.beomsu317.plugins.*
+import kotlinx.coroutines.*
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)

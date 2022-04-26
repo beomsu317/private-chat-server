@@ -9,14 +9,11 @@ import io.ktor.auth.jwt.*
 import org.koin.ktor.ext.inject
 
 fun Application.configureAuthentication() {
-    val getUserByIdUseCase: GetUserByIdUseCase by inject()
-
     install(Authentication) {
         jwt("jwt") {
             validate { credential ->
                 val id = credential.payload.getClaim("id").asString()
                 if (id.isNotEmpty()) {
-                    getUserByIdUseCase(id)
                     JWTPrincipal(credential.payload)
                 } else {
                     null
@@ -27,7 +24,6 @@ fun Application.configureAuthentication() {
                 .require(Algorithm.HMAC256(secret))
                 .build()
             )
-
         }
     }
 }

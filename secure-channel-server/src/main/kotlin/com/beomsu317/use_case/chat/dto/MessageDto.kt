@@ -2,7 +2,6 @@ package com.beomsu317.use_case.chat.dto
 
 @kotlinx.serialization.Serializable
 data class MessageDto(
-    val roomId: String,
     val senderId: String,
     val time: String,
     val displayName: String,
