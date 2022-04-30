@@ -33,7 +33,7 @@ class RegisterUserUseCase(
     private fun RegisterUserRequest.toEntity() = User(
         email = email,
         passwordSha256WithSalt = getSha256WithSalt(password),
-        displayName = "",
+        displayName = displayName,
         photoUrl = "",
         friends = emptySet(),
         rooms = emptySet()
@@ -42,6 +42,7 @@ class RegisterUserUseCase(
 
 @kotlinx.serialization.Serializable
 data class RegisterUserRequest(
+    val displayName: String,
     val email: String,
     val password: String,
     val confirmPassword: String
