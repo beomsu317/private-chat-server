@@ -13,11 +13,10 @@ class AddFriendsUseCase(
 
     suspend operator fun invoke(principal: JWTPrincipal, request: AddFriendsRequest) {
         val id = principal.payload.getClaim("id").asString()
-        val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
+        val user = repository.getUserById(id) ?: throw UserNotFoundException()
         val friendIds = request.friends.map {
-            val friendId = ObjectId(it).toId<User>()
-            val friend = repository.getUserById(friendId) ?: throw InappropriateFriendsIncludeException()
-            if (user.id == friendId) {
+            val friend = repository.getUserById(it) ?: throw InappropriateFriendsIncludeException()
+            if (user.id.toString() == it) {
                 throw InappropriateFriendsIncludeException()
             }
             friend.id

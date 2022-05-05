@@ -10,4 +10,5 @@ val userUseCaseModule = module(createdAtStart = true) {
     single { UpdateUserUseCase(get()) }
     single { AddFriendsUseCase(get()) }
     single { DeleteFriendsUseCase(get()) }
+    single { GetFriendsUseCase(get()) }
 }

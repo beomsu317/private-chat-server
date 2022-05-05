@@ -24,7 +24,7 @@ class ChatServiceUseCase(
         defaultWebSocketServerSession: DefaultWebSocketServerSession,
     ) {
         val id = principal.payload.getClaim("id").asString() ?: throw UnknownUserException()
-        val user = userRepository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
+        val user = userRepository.getUserById(id) ?: throw UserNotFoundException()
 
         notificationController.addUserSession(id, defaultWebSocketServerSession)
 

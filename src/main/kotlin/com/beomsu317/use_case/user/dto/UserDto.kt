@@ -1,4 +1,4 @@
-package com.beomsu317.use_case.user
+package com.beomsu317.use_case.user.dto
 
 @kotlinx.serialization.Serializable
 data class UserDto(

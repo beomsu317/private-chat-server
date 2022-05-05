@@ -19,16 +19,15 @@ class JoinRoomUseCase(
 
     suspend operator fun invoke(principal: JWTPrincipal, request: JoinRoomRequest) {
         val id = principal.payload.getClaim("id").asString() ?: throw UnknownUserException()
-        val roomId = ObjectId(request.roomId).toId<Room>()
-        val room = chatRepository.getRoomById(roomId) ?: throw RoomNotFoundException()
-        val user = userRepository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
+        val room = chatRepository.getRoomById(request.roomId) ?: throw RoomNotFoundException()
+        val user = userRepository.getUserById(id) ?: throw UserNotFoundException()
         val updatedRoom = room.copy(users = room.users + user.id)
         chatRepository.updateRoom(updatedRoom)
 
-        val updatedUser = user.copy(rooms = user.rooms + roomId)
+        val updatedUser = user.copy(rooms = user.rooms + ObjectId(request.roomId).toId())
         userRepository.updateUser(updatedUser)
 
-        roomController.sendMessage(roomId.toString(), "${user.displayName} joins ${room.title}")
+        roomController.sendMessage(request.roomId, "${user.displayName} joins ${room.title}")
     }
 }
 

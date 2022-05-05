@@ -21,18 +21,17 @@ class LeaveRoomUseCase(
         request: LeaveRoomRequest
     ) {
         val id = principal.payload.getClaim("id").asString()
-        val user = userRepository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
-        val roomId = ObjectId(request.roomId).toId<Room>()
-        val updatedUser = user.copy(rooms = user.rooms - roomId)
+        val user = userRepository.getUserById(id) ?: throw UserNotFoundException()
+        val updatedUser = user.copy(rooms = user.rooms - ObjectId(request.roomId).toId<Room>())
         userRepository.updateUser(updatedUser)
 
-        val room = chatRepository.getRoomById(roomId) ?: throw RoomNotFoundException()
+        val room = chatRepository.getRoomById(request.roomId) ?: throw RoomNotFoundException()
         val updatedRoom = room.copy(users = room.users - user.id)
         if (updatedRoom.users.isEmpty()) {
             chatRepository.deleteRoom(room)
         } else {
             chatRepository.updateRoom(updatedRoom)
-            roomController.sendMessage(roomId.toString(), "${user.displayName} left ${room.title}")
+            roomController.sendMessage(request.roomId, "${user.displayName} left ${room.title}")
         }
     }
 }

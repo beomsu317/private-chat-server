@@ -15,7 +15,7 @@ class UploadImageUseCase(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(id: String, part: PartData, serverUrl: String): UploadImageResult {
-        val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
+        val user = repository.getUserById(id) ?: throw UserNotFoundException()
         val uploadPath = "uploads/user/profile/"
 
         if (!File(uploadPath).isDirectory()) {

@@ -4,9 +4,11 @@ import com.beomsu317.use_case.user.UserRepository
 import com.beomsu317.entity.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.bson.types.ObjectId
 import org.litote.kmongo.Id
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.id.toId
 import org.litote.kmongo.toId
 
 class UserRepositoryImpl(
@@ -22,9 +24,9 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getUserById(id: Id<User>): User? {
+    override suspend fun getUserById(id: String): User? {
         return withContext(dispatcher) {
-            users.findOne(User::id eq id)
+            users.findOne(User::id eq ObjectId(id).toId())
         }
     }
 

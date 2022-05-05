@@ -1,6 +1,7 @@
 package com.beomsu317.use_case.user
 
 import com.beomsu317.entity.User
+import com.beomsu317.use_case.user.dto.UserDto
 
 fun User.toDto() = UserDto(
     id = id.toString(),

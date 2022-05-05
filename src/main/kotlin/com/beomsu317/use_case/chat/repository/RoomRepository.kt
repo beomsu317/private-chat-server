@@ -7,7 +7,7 @@ interface RoomRepository {
 
     suspend fun insertRoom(room: Room): Boolean
 
-    suspend fun getRoomById(id: Id<Room>): Room?
+    suspend fun getRoomById(id: String): Room?
 
     suspend fun updateRoom(room: Room)
 

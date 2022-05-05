@@ -32,8 +32,8 @@ class ChatUseCase(
         defaultWebSocketServerSession: DefaultWebSocketServerSession
     ) {
         val id = principal.payload.getClaim("id").asString() ?: throw UnknownUserException()
-        val user = userRepository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
-        val room = chatRepository.getRoomById(ObjectId(roomId).toId()) ?: throw RoomNotFoundException()
+        val user = userRepository.getUserById(id) ?: throw UserNotFoundException()
+        val room = chatRepository.getRoomById(id) ?: throw RoomNotFoundException()
 
         roomController.addSession(room.id.toString(), defaultWebSocketServerSession)
 

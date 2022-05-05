@@ -22,3 +22,6 @@ class RoomNotFoundException(code: Int = 5, message: String = "Room not found") :
 
 class SessionNotFoundException(code: Int = 6, message: String = "Session not found") :
     NotFoundException(code, message)
+
+class FriendNotFoundException(code: Int = 7, message: String = "Friend not found") :
+    NotFoundException(code, message)

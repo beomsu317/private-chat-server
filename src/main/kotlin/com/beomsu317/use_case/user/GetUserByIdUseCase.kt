@@ -1,6 +1,7 @@
 package com.beomsu317.use_case.user
 
 import com.beomsu317.use_case.exception.UnknownUserException
+import com.beomsu317.use_case.user.dto.UserDto
 import org.bson.types.ObjectId
 import org.litote.kmongo.id.toId
 
@@ -9,7 +10,7 @@ class GetUserByIdUseCase(
 ) {
 
     suspend operator fun invoke(id: String): GetUserByIdResult {
-        val user = repository.getUserById(ObjectId(id).toId()) ?: throw UnknownUserException()
+        val user = repository.getUserById(id) ?: throw UnknownUserException()
         return GetUserByIdResult(user.toDto())
     }
 }

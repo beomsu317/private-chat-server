@@ -12,7 +12,7 @@ class UpdateUserUseCase(
 ) {
 
     suspend operator fun invoke(id: String, request: UpdateUserRequest) {
-        val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
+        val user = repository.getUserById(id) ?: throw UserNotFoundException()
         val updatedUser = user.copy(photoUrl = request.photoUrl)
         repository.updateUser(updatedUser)
     }

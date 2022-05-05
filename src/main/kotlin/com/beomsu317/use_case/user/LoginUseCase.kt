@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.beomsu317.use_case.common.validatePasswordHash
 import com.beomsu317.use_case.exception.LoginFailedException
+import com.beomsu317.use_case.user.dto.UserDto
 
 class LoginUseCase(
     private val repository: UserRepository
@@ -21,7 +22,7 @@ class LoginUseCase(
             .withClaim("displayName", user.displayName)
             .withClaim("photoUrl", user.photoUrl)
             .sign(Algorithm.HMAC256(secret))
-        return LoginResult(token, user.toDto())
+        return LoginResult(token)
     }
 }
 
@@ -33,6 +34,5 @@ data class LoginRequest(
 
 @kotlinx.serialization.Serializable
 data class LoginResult(
-    val token: String,
-    val user: UserDto
+    val token: String
 )

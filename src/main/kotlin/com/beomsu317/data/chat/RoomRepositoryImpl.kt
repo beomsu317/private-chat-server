@@ -4,9 +4,11 @@ import com.beomsu317.entity.Room
 import com.beomsu317.use_case.chat.repository.RoomRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.bson.types.ObjectId
 import org.litote.kmongo.Id
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.id.toId
 
 class RoomRepositoryImpl(
     private val db: CoroutineDatabase,
@@ -21,9 +23,9 @@ class RoomRepositoryImpl(
         }
     }
 
-    override suspend fun getRoomById(id: Id<Room>): Room? {
+    override suspend fun getRoomById(id: String): Room? {
         return withContext(dispatcher) {
-            rooms.findOne(Room::id eq id)
+            rooms.findOne(Room::id eq ObjectId(id).toId())
         }
     }
 
