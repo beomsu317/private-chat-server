@@ -21,7 +21,7 @@ class LoginUseCase(
             .withClaim("displayName", user.displayName)
             .withClaim("photoUrl", user.photoUrl)
             .sign(Algorithm.HMAC256(secret))
-        return LoginResult(token)
+        return LoginResult(token, user.toDto())
     }
 }
 
@@ -33,5 +33,6 @@ data class LoginRequest(
 
 @kotlinx.serialization.Serializable
 data class LoginResult(
-    val token: String
+    val token: String,
+    val user: UserDto
 )

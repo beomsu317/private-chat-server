@@ -13,16 +13,12 @@ class UpdateUserUseCase(
 
     suspend operator fun invoke(id: String, request: UpdateUserRequest) {
         val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
-        if (request.displayName.isNullOrEmpty()) {
-            throw EmptyDisplayNameException()
-        }
-        val updatedUser = user.copy(displayName = request.displayName, photoUrl = request.photoUrl)
+        val updatedUser = user.copy(photoUrl = request.photoUrl)
         repository.updateUser(updatedUser)
     }
 }
 
 @kotlinx.serialization.Serializable
 data class UpdateUserRequest(
-    val displayName: String,
     val photoUrl: String
 )

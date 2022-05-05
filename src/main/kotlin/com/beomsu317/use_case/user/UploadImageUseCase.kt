@@ -7,38 +7,37 @@ import io.ktor.http.content.*
 import org.bson.types.ObjectId
 import org.litote.kmongo.id.toId
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 
 class UploadImageUseCase(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(id: String, part: PartData, serverUrl: String): UploadImageResult {
         val user = repository.getUserById(ObjectId(id).toId()) ?: throw UserNotFoundException()
-        var photoUri = "uploads/user/profile/${user.id}."
+        val uploadPath = "uploads/user/profile/"
+
+        if (!File(uploadPath).isDirectory()) {
+            Files.createDirectories(Paths.get(uploadPath))
+        }
+
+        var photoUri = "${uploadPath}${user.id}"
         when (part) {
             is PartData.FileItem -> {
                 val fileBytes = part.streamProvider().readBytes()
-                val type = part.contentType
-                when (type) {
-                    ContentType.Image.PNG -> {
-                        photoUri = photoUri + ContentType.Image.PNG.contentSubtype
-                        File(photoUri).writeBytes(fileBytes)
-                    }
-                    ContentType.Image.JPEG -> {
-                        photoUri = photoUri + ContentType.Image.JPEG.contentSubtype
-                        File(photoUri).writeBytes(fileBytes)
-                    }
-                    ContentType.Image.GIF -> {
-                        photoUri = photoUri + ContentType.Image.GIF.contentSubtype
-                        File(photoUri).writeBytes(fileBytes)
-                    }
-                    else -> {
-                        throw UnSupportedImageTypeException()
-                    }
+                val type = part.contentType ?: throw Exception("type is unknown")
+
+                if (type.contentType != "image") {
+                    throw UnSupportedImageTypeException()
                 }
+
+                File(photoUri).writeBytes(fileBytes)
             }
         }
-        photoUri = photoUri.replace("uploads", "")
-        return UploadImageResult(serverUrl + photoUri)
+        val url = File(serverUrl, photoUri.replace("uploads", ""))
+        repository.updateUser(user = user.copy(photoUrl = url.path))
+        return UploadImageResult(url.path)
     }
 }
 
