@@ -15,7 +15,8 @@ import io.ktor.routing.*
 class FriendsRoute(
     addFriendsUseCase: AddFriendsUseCase,
     deleteFriendsUseCase: DeleteFriendsUseCase,
-    getFriendsUseCase: GetFriendsUseCase
+    getFriendsUseCase: GetFriendsUseCase,
+    getAllFriendsUseCase: GetAllFriendsUseCase
 ) : Route({
     authenticate("jwt") {
         route("/user/friends") {
@@ -25,11 +26,17 @@ class FriendsRoute(
                 call.respond(HttpStatusCode.OK, Response<GetFriendsResult>(result = result))
             }
 
+            get("/all") {
+                val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
+                val result = getAllFriendsUseCase(principal)
+                call.respond(HttpStatusCode.OK, Response<GetAllFriendsResult>(result = result))
+            }
+
             post("/add") {
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
                 val request = call.receive<AddFriendsRequest>()
-                addFriendsUseCase(principal, request)
-                call.respond(HttpStatusCode.OK, Response<Unit>())
+                val result = addFriendsUseCase(principal, request)
+                call.respond(HttpStatusCode.OK, Response<AddFriendResult>(result = result))
             }
 
             post("/delete") {

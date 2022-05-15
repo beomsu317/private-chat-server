@@ -13,4 +13,6 @@ interface UserRepository {
     suspend fun getUserByEmail(email: String): User?
 
     suspend fun updateUser(user: User)
+
+    suspend fun getUsers(): List<User>
 }

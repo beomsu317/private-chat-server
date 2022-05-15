@@ -41,4 +41,10 @@ class UserRepositoryImpl(
             users.updateOne(User::id eq user.id, user).wasAcknowledged()
         }
     }
+
+    override suspend fun getUsers(): List<User> {
+        return withContext(dispatcher) {
+            users.find().toList()
+        }
+    }
 }

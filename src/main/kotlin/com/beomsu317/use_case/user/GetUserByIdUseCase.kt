@@ -1,5 +1,6 @@
 package com.beomsu317.use_case.user
 
+import com.beomsu317.entity.toDto
 import com.beomsu317.use_case.exception.UnknownUserException
 import com.beomsu317.use_case.user.dto.UserDto
 import org.bson.types.ObjectId
