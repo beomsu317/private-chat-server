@@ -10,15 +10,20 @@ class GetAllFriendsUseCase(
     suspend operator fun invoke(principal: JWTPrincipal): GetAllFriendsResult {
         val id = principal.payload.getClaim("id").asString()
         val user = repository.getUserById(id) ?: throw UserNotFoundException()
+        val friendIds = user.friends.map { it.id }
         val allUsers = repository.getUsers()
-        val users = (allUsers - user).map {
-            FriendDto(
-                id = it.id.toString(),
-                email = it.email,
-                photoUrl = it.photoUrl,
-                displayName = it.displayName
-            )
-        }
+        val users = (allUsers - user)
+            .filter {
+                !friendIds.contains(it.id)
+            }
+            .map {
+                FriendDto(
+                    id = it.id.toString(),
+                    email = it.email,
+                    photoUrl = it.photoUrl,
+                    displayName = it.displayName
+                )
+            }
         return GetAllFriendsResult(friends = users.toSet())
     }
 }

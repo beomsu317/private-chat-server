@@ -15,19 +15,22 @@ class DeleteFriendsUseCase(
         val id = principal.payload.getClaim("id").asString()
         val user = repository.getUserById(id) ?: throw UserNotFoundException()
         val friends = request.friends.map {
-            repository.getUserById(it.id) ?: throw InappropriateFriendsIncludeException()
-            if (user.id.toString() == it.id) {
+            val friend = repository.getUserById(it) ?: throw InappropriateFriendsIncludeException()
+            if (user.id.toString() == it) {
                 throw InappropriateFriendsIncludeException()
             }
-            it.toEntity()
+            friend.id
+        }
+        val updatedFriends = user.friends.filter {
+            !friends.contains(it.id)
         }
 
-        val updatedUser = user.copy(friends = user.friends - friends.toSet())
+        val updatedUser = user.copy(friends = updatedFriends.toSet())
         repository.updateUser(updatedUser)
     }
 }
 
 @kotlinx.serialization.Serializable
 data class DeleteFriendsRequest(
-    val friends: Set<UserFriendDto>
+    val friends: Set<String>
 )

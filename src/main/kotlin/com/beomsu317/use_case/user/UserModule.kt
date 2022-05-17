@@ -4,7 +4,7 @@ import org.koin.dsl.module
 
 val userUseCaseModule = module(createdAtStart = true) {
     single { RegisterUserUseCase(get()) }
-    single { LoginUseCase(get()) }
+    single { SignInUseCase(get()) }
     single { UploadImageUseCase(get()) }
     single { GetUserByIdUseCase(get()) }
     single { UpdateUserUseCase(get()) }

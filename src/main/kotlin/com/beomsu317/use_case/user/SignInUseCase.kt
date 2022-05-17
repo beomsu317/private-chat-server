@@ -2,15 +2,16 @@ package com.beomsu317.use_case.user
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.beomsu317.entity.toDto
 import com.beomsu317.use_case.common.validatePasswordHash
 import com.beomsu317.use_case.exception.LoginFailedException
 import com.beomsu317.use_case.user.dto.UserDto
 
-class LoginUseCase(
+class SignInUseCase(
     private val repository: UserRepository
 ) {
 
-    suspend operator fun invoke(request: LoginRequest, secret: String): LoginResult {
+    suspend operator fun invoke(request: SignInRequest, secret: String): SignInResult {
         val user = repository.getUserByEmail(request.email) ?: throw LoginFailedException()
         if (!validatePasswordHash(user.passwordSha256WithSalt, request.password)) {
             throw LoginFailedException()
@@ -22,17 +23,18 @@ class LoginUseCase(
             .withClaim("displayName", user.displayName)
             .withClaim("photoUrl", user.photoUrl)
             .sign(Algorithm.HMAC256(secret))
-        return LoginResult(token)
+        return SignInResult(token, user.toDto())
     }
 }
 
 @kotlinx.serialization.Serializable
-data class LoginRequest(
+data class SignInRequest(
     val email: String,
     val password: String
 )
 
 @kotlinx.serialization.Serializable
-data class LoginResult(
-    val token: String
+data class SignInResult(
+    val token: String,
+    val user: UserDto
 )
