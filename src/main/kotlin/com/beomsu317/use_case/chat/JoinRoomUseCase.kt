@@ -1,7 +1,6 @@
 package com.beomsu317.use_case.chat
 
-import com.beomsu317.entity.Room
-import com.beomsu317.use_case.chat.controller.RoomController
+import com.beomsu317.use_case.chat.controller.UserSessionController
 import com.beomsu317.use_case.chat.repository.RoomRepository
 import com.beomsu317.use_case.exception.RoomNotFoundException
 import com.beomsu317.use_case.exception.UnknownUserException
@@ -14,7 +13,7 @@ import org.litote.kmongo.id.toId
 class JoinRoomUseCase(
     private val userRepository: UserRepository,
     private val chatRepository: RoomRepository,
-    private val roomController: RoomController
+    private val roomController: UserSessionController
 ) {
 
     suspend operator fun invoke(principal: JWTPrincipal, request: JoinRoomRequest) {
@@ -27,7 +26,7 @@ class JoinRoomUseCase(
         val updatedUser = user.copy(rooms = user.rooms + ObjectId(request.roomId).toId())
         userRepository.updateUser(updatedUser)
 
-        roomController.sendMessage(request.roomId, "${user.displayName} joins ${room.title}")
+//        roomController.sendMessage(request.roomId, "${user.displayName} joined this room")
     }
 }
 

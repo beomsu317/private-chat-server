@@ -1,5 +1,7 @@
 package com.beomsu317.use_case.user.dto
 
+import com.beomsu317.entity.Room
+import com.beomsu317.entity.User
 import com.beomsu317.entity.UserFriend
 import org.bson.types.ObjectId
 import org.litote.kmongo.id.toId

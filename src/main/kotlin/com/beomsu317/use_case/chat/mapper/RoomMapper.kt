@@ -5,7 +5,6 @@ import com.beomsu317.use_case.chat.dto.RoomDto
 
 fun Room.toDto() = RoomDto(
     id = id.toString(),
-    title = title,
     owner = owner.toString(),
     users = users.map { it.toString() }.toSet()
 )

@@ -1,7 +1,7 @@
 package com.beomsu317.use_case.chat
 
 import com.beomsu317.entity.Room
-import com.beomsu317.use_case.chat.controller.RoomController
+import com.beomsu317.use_case.chat.controller.UserSessionController
 import com.beomsu317.use_case.chat.repository.RoomRepository
 import com.beomsu317.use_case.exception.RoomNotFoundException
 import com.beomsu317.use_case.exception.UserNotFoundException
@@ -13,7 +13,7 @@ import org.litote.kmongo.id.toId
 class LeaveRoomUseCase(
     private val userRepository: UserRepository,
     private val chatRepository: RoomRepository,
-    private val roomController: RoomController
+    private val roomController: UserSessionController
 ) {
 
     suspend operator fun invoke(
@@ -31,7 +31,7 @@ class LeaveRoomUseCase(
             chatRepository.deleteRoom(room)
         } else {
             chatRepository.updateRoom(updatedRoom)
-            roomController.sendMessage(request.roomId, "${user.displayName} left ${room.title}")
+//            roomController.sendMessage(request.roomId, "${user.displayName} left this room")
         }
     }
 }

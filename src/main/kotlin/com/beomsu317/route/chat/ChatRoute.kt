@@ -22,10 +22,9 @@ class ChatRoute(
                 chatServiceUseCase.invoke(principal, incoming, this)
             }
 
-            webSocket("/{roomId}") {
-                val roomId = call.parameters["roomId"] ?: throw ParameterNotFoundException()
+            webSocket("/chat-server") {
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
-                chatUseCase.invoke(principal, roomId, incoming, this)
+                chatUseCase.invoke(principal, incoming, this)
             }
         }
     }

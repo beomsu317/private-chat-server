@@ -1,63 +1,63 @@
 package com.beomsu317.use_case.chat
 
 import com.beomsu317.use_case.UseCase
-import com.beomsu317.use_case.chat.controller.RoomController
+import com.beomsu317.use_case.chat.controller.UserSessionController
 import com.beomsu317.use_case.chat.dto.MessageDto
 import com.beomsu317.use_case.chat.repository.RoomRepository
-import com.beomsu317.use_case.exception.NoPermissionForRoomException
 import com.beomsu317.use_case.exception.RoomNotFoundException
 import com.beomsu317.use_case.exception.UnknownUserException
 import com.beomsu317.use_case.exception.UserNotFoundException
 import com.beomsu317.use_case.user.UserRepository
+import com.fasterxml.jackson.core.JsonParseException
 import io.ktor.auth.jwt.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.bson.types.ObjectId
-import org.litote.kmongo.id.toId
 
 @UseCase
 class ChatUseCase(
     private val userRepository: UserRepository,
     private val chatRepository: RoomRepository,
-    private val roomController: RoomController
+    private val sessionController: UserSessionController
 ) {
     suspend operator fun invoke(
         principal: JWTPrincipal,
-        roomId: String,
         incoming: ReceiveChannel<Frame>,
         defaultWebSocketServerSession: DefaultWebSocketServerSession
     ) {
         val id = principal.payload.getClaim("id").asString() ?: throw UnknownUserException()
         val user = userRepository.getUserById(id) ?: throw UserNotFoundException()
-        val room = chatRepository.getRoomById(id) ?: throw RoomNotFoundException()
 
-        roomController.addSession(room.id.toString(), defaultWebSocketServerSession)
-
-        if (!room.users.contains(user.id)) {
-            throw NoPermissionForRoomException()
-        }
+        sessionController.addSession(user.id.toString(), defaultWebSocketServerSession)
 
         try {
             for (frame in incoming) {
                 when (frame) {
                     is Frame.Text -> {
-                        val receiveText = frame.readText()
-                        val messageDto = Json.decodeFromString<MessageDto>(receiveText)
-                        if (messageDto.displayName != user.displayName) {
-                            throw UnknownUserException()
+                        try {
+                            val receiveText = frame.readText()
+                            val messageDto = Json.decodeFromString<MessageDto>(receiveText)
+                            if (messageDto.senderId != user.id.toString()) {
+                                throw UnknownUserException()
+                            }
+                            val room = chatRepository.getRoomById(messageDto.roomId) ?: throw RoomNotFoundException()
+                            room.users.forEach { id ->
+                                sessionController.sendMessage(id.toString(), Json.encodeToString(messageDto.copy(displayName = user.displayName)))
+                            }
+                        } catch (e: SerializationException) {
+                            continue
                         }
-                        roomController.sendMessage(room.id.toString(), Json.encodeToString(messageDto))
                     }
                 }
             }
         } catch (e: Throwable) {
-            throw e
+            e.printStackTrace()
         } finally {
-            roomController.removeSession(room.id.toString(), defaultWebSocketServerSession)
+            sessionController.removeSession(user.id.toString())
         }
     }
 }

@@ -38,3 +38,4 @@ fun UserFriend.toDto(): UserFriendDto {
         priority = priority
     )
 }
+
