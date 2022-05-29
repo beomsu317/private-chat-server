@@ -10,4 +10,5 @@ val chatUseCaseModule = module(createdAtStart = true) {
     single { CreateRoomUseCase(get(), get()) }
     single { LeaveRoomUseCase(get(), get(), get()) }
     single { ChatServiceUseCase(get()) }
+    single { GetRoomInfoUseCase(get()) }
 }

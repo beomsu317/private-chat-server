@@ -1,6 +1,7 @@
 package com.beomsu317.route.user
 
 import com.beomsu317.route.Route
+import com.beomsu317.use_case.exception.FriendIdNotSetException
 import com.beomsu317.use_case.exception.UnknownUserException
 import com.beomsu317.use_case.response.Response
 import com.beomsu317.use_case.user.*
@@ -16,7 +17,8 @@ class FriendsRoute(
     addFriendsUseCase: AddFriendsUseCase,
     deleteFriendsUseCase: DeleteFriendsUseCase,
     getFriendsUseCase: GetFriendsUseCase,
-    getAllFriendsUseCase: GetAllFriendsUseCase
+    getAllFriendsUseCase: GetAllFriendsUseCase,
+    getFriendUseCase: GetFriendUseCase
 ) : Route({
     authenticate("jwt") {
         route("/user/friends") {
@@ -24,6 +26,13 @@ class FriendsRoute(
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
                 val result = getFriendsUseCase(principal)
                 call.respond(HttpStatusCode.OK, Response<GetFriendsResult>(result = result))
+            }
+
+            get("/{frinedId}") {
+                val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
+                val friendId = call.parameters["frinedId"] ?: throw FriendIdNotSetException()
+                val result = getFriendUseCase(friendId)
+                call.respond(HttpStatusCode.OK, Response<GetFriendResult>(result = result))
             }
 
             get("/all") {

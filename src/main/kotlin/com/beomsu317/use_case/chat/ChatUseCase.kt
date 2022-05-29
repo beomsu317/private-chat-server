@@ -49,7 +49,7 @@ class ChatUseCase(
                                 sessionController.sendMessage(id.toString(), Json.encodeToString(messageDto.copy(displayName = user.displayName)))
                             }
                         } catch (e: SerializationException) {
-                            continue
+                            e.printStackTrace()
                         }
                     }
                 }

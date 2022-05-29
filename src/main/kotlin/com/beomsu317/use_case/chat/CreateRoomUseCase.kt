@@ -23,7 +23,8 @@ class CreateRoomUseCase(
 
         owner.rooms.forEach { roomId ->
             val room = chatRepository.getRoomById(roomId.toString()) ?: throw RoomNotFoundException()
-            if (room.users.contains(ObjectId(request.userId).toId())) {
+            val users = room.users - owner.id
+            if (users.contains(ObjectId(request.userId).toId())) {
                 return CreateRoomResult(room.toDto())
             }
         }
