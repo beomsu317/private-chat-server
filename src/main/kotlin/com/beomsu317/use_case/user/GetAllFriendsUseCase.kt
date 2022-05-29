@@ -21,7 +21,9 @@ class GetAllFriendsUseCase(
                     id = it.id.toString(),
                     email = it.email,
                     photoUrl = it.photoUrl,
-                    displayName = it.displayName
+                    displayName = it.displayName,
+                    numberOfFriends = it.friends.size + 1,
+                    numberOfRooms = it.rooms.size + 1
                 )
             }
         return GetAllFriendsResult(friends = users.toSet())

@@ -22,7 +22,9 @@ class AddFriendsUseCase(
                 id = friend.id.toString(),
                 email = friend.email,
                 photoUrl = friend.photoUrl,
-                displayName = friend.displayName
+                displayName = friend.displayName,
+                numberOfFriends = friend.friends.size + 1,
+                numberOfRooms = friend.rooms.size + 1
             )
             if (user.id.toString() == it.id) {
                 throw InappropriateFriendsIncludeException()
