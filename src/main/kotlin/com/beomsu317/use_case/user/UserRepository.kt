@@ -15,4 +15,6 @@ interface UserRepository {
     suspend fun updateUser(user: User)
 
     suspend fun getUsers(): List<User>
+
+    suspend fun getUsers(searchText: String): List<User>
 }

@@ -17,7 +17,7 @@ class FriendsRoute(
     addFriendsUseCase: AddFriendsUseCase,
     deleteFriendsUseCase: DeleteFriendsUseCase,
     getFriendsUseCase: GetFriendsUseCase,
-    getAllFriendsUseCase: GetAllFriendsUseCase,
+    getAllFriendsUseCase: GetSearchFriendsUseCase,
     getFriendUseCase: GetFriendUseCase
 ) : Route({
     authenticate("jwt") {
@@ -35,10 +35,11 @@ class FriendsRoute(
                 call.respond(HttpStatusCode.OK, Response<GetFriendResult>(result = result))
             }
 
-            get("/all") {
+            post("/search") {
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
-                val result = getAllFriendsUseCase(principal)
-                call.respond(HttpStatusCode.OK, Response<GetAllFriendsResult>(result = result))
+                val request = call.receive<GetSearchFriendsRequest>()
+                val result = getAllFriendsUseCase(principal, request)
+                call.respond(HttpStatusCode.OK, Response<GetSearchFriendsResult>(result = result))
             }
 
             post("/add") {

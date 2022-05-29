@@ -5,11 +5,9 @@ import com.beomsu317.entity.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.bson.types.ObjectId
-import org.litote.kmongo.Id
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
 import org.litote.kmongo.id.toId
-import org.litote.kmongo.toId
 
 class UserRepositoryImpl(
     private val db: CoroutineDatabase,
@@ -45,6 +43,12 @@ class UserRepositoryImpl(
     override suspend fun getUsers(): List<User> {
         return withContext(dispatcher) {
             users.find().toList()
+        }
+    }
+
+    override suspend fun getUsers(searchText: String): List<User> {
+        return withContext(dispatcher) {
+            users.find("{displayName: /${searchText}/}").toList()
         }
     }
 }
