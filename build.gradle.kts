@@ -6,7 +6,9 @@ val logback_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.6.10"
-                id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+
 }
 
 group = "com.beomsu317"
@@ -36,9 +38,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     val koin_version = "3.1.2"
-    implementation("io.insert-koin:koin-core:$koin_version")
-    implementation("io.insert-koin:koin-ktor:$koin_version")
-    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
+    implementation("io.insert-koin:koin-core:${koin_version}")
+    implementation("io.insert-koin:koin-ktor:${koin_version}")
+    implementation("io.insert-koin:koin-logger-slf4j:${koin_version}")
 
     val kmongo_version = "4.5.1"
     implementation("org.litote.kmongo:kmongo:${kmongo_version}")
