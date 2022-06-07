@@ -4,10 +4,10 @@ import com.beomsu317.use_case.exception.UserNotFoundException
 import com.beomsu317.use_case.user.dto.FriendDto
 import io.ktor.auth.jwt.*
 
-class GetSearchFriendsUseCase(
+class SearchFriendsUseCase(
     private val repository: UserRepository
 ) {
-    suspend operator fun invoke(principal: JWTPrincipal, request: GetSearchFriendsRequest): GetSearchFriendsResult {
+    suspend operator fun invoke(principal: JWTPrincipal, request: SearchFriendsRequest): SearchFriendsResult {
         val id = principal.payload.getClaim("id").asString()
         val user = repository.getUserById(id) ?: throw UserNotFoundException()
         val friendIds = user.friends.map { it.id }
@@ -22,20 +22,20 @@ class GetSearchFriendsUseCase(
                     email = it.email,
                     photoUrl = it.photoUrl,
                     displayName = it.displayName,
-                    numberOfFriends = it.friends.size + 1,
-                    numberOfRooms = it.rooms.size + 1
+                    numberOfFriends = it.friends.size,
+                    numberOfRooms = it.rooms.size
                 )
             }
-        return GetSearchFriendsResult(friends = users.toSet())
+        return SearchFriendsResult(friends = users.toSet())
     }
 }
 
 @kotlinx.serialization.Serializable
-data class GetSearchFriendsRequest(
+data class SearchFriendsRequest(
     val searchText: String
 )
 
 @kotlinx.serialization.Serializable
-data class GetSearchFriendsResult(
+data class SearchFriendsResult(
     val friends: Set<FriendDto>
 )

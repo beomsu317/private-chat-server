@@ -20,8 +20,8 @@ class GetFriendsUseCase(
                     email = friend.email,
                     photoUrl = friend.photoUrl,
                     displayName = friend.displayName,
-                    numberOfFriends = friend.friends.size + 1,
-                    numberOfRooms = friend.rooms.size + 1
+                    numberOfFriends = friend.friends.size,
+                    numberOfRooms = friend.rooms.size
                 )
             }.toSet()
         return GetFriendsResult(friends)

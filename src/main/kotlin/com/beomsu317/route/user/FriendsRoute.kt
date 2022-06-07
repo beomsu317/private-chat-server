@@ -17,7 +17,7 @@ class FriendsRoute(
     addFriendsUseCase: AddFriendsUseCase,
     deleteFriendsUseCase: DeleteFriendsUseCase,
     getFriendsUseCase: GetFriendsUseCase,
-    getAllFriendsUseCase: GetSearchFriendsUseCase,
+    searchFriendsUseCase: SearchFriendsUseCase,
     getFriendUseCase: GetFriendUseCase
 ) : Route({
     authenticate("jwt") {
@@ -29,7 +29,6 @@ class FriendsRoute(
             }
 
             get("/{frinedId}") {
-                val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
                 val friendId = call.parameters["frinedId"] ?: throw FriendIdNotSetException()
                 val result = getFriendUseCase(friendId)
                 call.respond(HttpStatusCode.OK, Response<GetFriendResult>(result = result))
@@ -37,9 +36,9 @@ class FriendsRoute(
 
             post("/search") {
                 val principal = call.principal<JWTPrincipal>() ?: throw UnknownUserException()
-                val request = call.receive<GetSearchFriendsRequest>()
-                val result = getAllFriendsUseCase(principal, request)
-                call.respond(HttpStatusCode.OK, Response<GetSearchFriendsResult>(result = result))
+                val request = call.receive<SearchFriendsRequest>()
+                val result = searchFriendsUseCase(principal, request)
+                call.respond(HttpStatusCode.OK, Response<SearchFriendsResult>(result = result))
             }
 
             post("/add") {
