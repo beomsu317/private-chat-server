@@ -1,7 +1,7 @@
 # Private Chat Server
 
 Private Chat Server is an Application Server based on ktor. Chat with friends without storing messages on the server.
-Since no messages are stored on the server, it is completely confidential.
+Since no messages are stored on the server, it is completely confidential. Used in the [Private Chat App](https://github.com/beomsu317/private-chat-app).
 
 ## Installation
 
@@ -333,8 +333,12 @@ java -jar com.beomsu317.privatechatserver-0.0.1-all.jar
 
 - [Kotlin](https://developer.android.com/kotlin) based, [Kotlin Flow](https://developer.android.com/kotlin/flow)
     + [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines) for asynchronous.
+- [Ktor](https://ktor.io/)
+  - [WebSocket](https://ktor.io/docs/websocket.html) for chat with users.
+  - [Serialization](https://ktor.io/docs/serialization.html) for serialization.
+  - [Json Web Token](https://ktor.io/docs/jwt.html) for user authentication.
 - [Koin](https://insert-koin.io/) for dependency injection.
-- [Kmongo]()
+- [Kmongo](https://litote.org/kmongo/) for mongodb database.
 
 ## License
 
